@@ -6,7 +6,7 @@ namespace quizeAppApi.Models
     public class Book
     {
 
-        public Book()
+        public Book() 
         {
             this.Id = ObjectId.GenerateNewId().ToString();
         }

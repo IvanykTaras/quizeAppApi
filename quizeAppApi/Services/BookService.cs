@@ -9,7 +9,7 @@ namespace quizeAppApi.Services
     {
         private readonly IMongoCollection<Book> _booksCollection;
 
-        public BooksService(
+        public BooksService( 
             IOptions<BookStoreDatabaseSettings> bookStoreDatabaseSettings)
         {
             var mongoClient = new MongoClient(

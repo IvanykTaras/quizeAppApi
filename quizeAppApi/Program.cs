@@ -9,10 +9,14 @@ builder.Services.AddControllers();
 
 //Services
 builder.Services.AddSingleton<BooksService>();
+builder.Services.AddSingleton<CategoryService>();
 
 //MongoDbConnection
 builder.Services.Configure<BookStoreDatabaseSettings>(
     builder.Configuration.GetSection("BookStoreDatabase"));
+
+builder.Services.Configure<QuizeDatabaseSettings>(
+    builder.Configuration.GetSection("QuizeDatabase"));
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
