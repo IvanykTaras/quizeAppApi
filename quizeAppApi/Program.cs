@@ -10,6 +10,7 @@ builder.Services.AddControllers();
 //Services
 builder.Services.AddSingleton<BooksService>();
 builder.Services.AddSingleton<CategoryService>();
+builder.Services.AddSingleton<QuestionService>();
 
 //MongoDbConnection
 builder.Services.Configure<BookStoreDatabaseSettings>(

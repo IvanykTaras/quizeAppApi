@@ -10,17 +10,28 @@ namespace quizeAppApi.Controllers
     public class QuizeController : ControllerBase
     {
         private readonly CategoryService _categoryService;
-        public QuizeController(CategoryService categoryService) {
-            _categoryService = categoryService;        
+        private readonly QuestionService _questionService;
+        public QuizeController(CategoryService categoryService, QuestionService questionService)
+        {
+            _categoryService = categoryService;
+            _questionService = questionService;
         }
 
-        [HttpGet]
+        //================
+        //Category Methods
+        //================
+
+        [HttpGet("category/")]
         public async Task<List<Category>> GetCategory()
             => await _categoryService.GetAsync();
 
-        [HttpGet("{id:length(24)}")]
+        [HttpGet("category/question/{id:length(24)}")]
+        public async Task<List<Question>> GetQuestions(string id) 
+            => await _categoryService.GetQuestionsAsync(id);
+
+        [HttpGet("category/{id:length(24)}")]
         public async Task<ActionResult<Category>> GetCategory(string id) { 
-            Category category = await _categoryService.GetAsync(id);
+            var category = await _categoryService.GetAsync(id);
 
             if (category is null)
             {
@@ -31,7 +42,7 @@ namespace quizeAppApi.Controllers
             return category;
         }
 
-        [HttpPost]
+        [HttpPost("category/")]
         public async Task<ActionResult> CreateCategory(Category category)
         {
             await _categoryService.CreateAsync(category);
@@ -39,7 +50,7 @@ namespace quizeAppApi.Controllers
             return CreatedAtAction(nameof(GetCategory), new { id = category.Id }, category);
         }
 
-        [HttpPut("{id:length(24)}")]
+        [HttpPut("category/{id:length(24)}")]
         public async Task<ActionResult> UpdateCategory(string id, Category category)
         {
             var find = await _categoryService.GetAsync(id);
@@ -52,14 +63,73 @@ namespace quizeAppApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:length(24)}")]
+        [HttpDelete("category/{id:length(24)}")]
         public async Task<ActionResult> DeleteCategory(string id)
         {
-            var find = _categoryService.GetAsync(id);
-
+            var find = await _categoryService.GetAsync(id);
+            
             if (find is null) {
                 return NotFound();
             }
+
+            await _categoryService.RemoveAsync(id);
+
+            return NoContent();
+        }
+
+        //================
+        //Question Methods
+        //================
+
+        [HttpGet("question/")]
+        public async Task<List<Question>> GetQuestion()
+            => await _questionService.GetAsync();
+
+        [HttpGet("question/{id:length(24)}")]
+        public async Task<ActionResult<Question>> GetQuestion(string id)
+        {
+            var question = await _questionService.GetAsync(id);
+
+            if (question is null)
+            {
+                return NotFound();
+            }
+
+            return question;
+        }
+
+        [HttpPost("question/")]
+        public async Task<ActionResult> CreateQuestion(Question question)
+        {
+            await _questionService.CreateAsync(question);
+
+            return CreatedAtAction(nameof(GetCategory), new { id = question.Id }, question);
+        }
+
+        [HttpPut("question/{id:length(24)}")]
+        public async Task<ActionResult> UpdateQuestion(string id, Question question)
+        {
+            var find = await _questionService.GetAsync(id);
+            if (find is null)
+            {
+                return NotFound();
+            }
+
+            await _questionService.UpdateAsync(id, question);
+            return NoContent();
+        }
+
+        [HttpDelete("question/{id:length(24)}")]
+        public async Task<ActionResult> DeleteQuestion(string id)
+        {
+            var find = await _questionService.GetAsync(id);
+
+            if (find is null)
+            {
+                return NotFound();
+            }
+
+            await _questionService.RemoveAsync(id);
 
             return NoContent();
         }
