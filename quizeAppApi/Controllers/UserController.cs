@@ -59,7 +59,7 @@ namespace quizeAppApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("category/{id:length(24)}")]
+        [HttpDelete("{id:length(24)}")]
         public async Task<ActionResult> DeleteCategory(string id)
         {
             var find = await _userService.GetAsync(id);
